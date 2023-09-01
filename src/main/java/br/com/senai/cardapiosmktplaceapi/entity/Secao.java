@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -36,5 +37,19 @@ public class Secao {
 	@NotNull(message = "O status é obrigatório")
 	@Column(name = "status")
 	private Status status;
+	
+	public Secao() {
+		this.status = Status.A;
+	}
+	
+	@Transient
+	public boolean isPersistido() {
+		return getId() != null && getId() > 0;
+	}
+	
+	@Transient
+	public boolean isAtiva() {
+		return getStatus() == Status.A;
+	}
 
 }

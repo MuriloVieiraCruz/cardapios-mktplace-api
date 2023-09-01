@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -47,4 +48,18 @@ public class Cardapio {
 	@JoinColumn(name = "id_restaurante")
 	@NotNull(message = "O restaurante é obrigatório")
 	private Restaurante restaurante;
+	
+	public Cardapio() {
+		this.status = Status.A;
+	}
+	
+	@Transient
+	public boolean isPersistido() {
+		return getId() != null && getId() > 0;
+	}
+	
+	@Transient
+	public boolean isAtiva() {
+		return getStatus() == Status.A;
+	}
 }
