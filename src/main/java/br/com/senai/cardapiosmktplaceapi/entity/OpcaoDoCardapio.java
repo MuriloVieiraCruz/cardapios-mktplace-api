@@ -63,4 +63,8 @@ public class OpcaoDoCardapio {
 	@JoinColumn(name = "id_opcao")
 	@NotNull(message = "A opção é obrigatória")
 	private Opcao opcao;
+	
+	public OpcaoDoCardapio() {
+		this.status = Status.A;
+	}
 }
