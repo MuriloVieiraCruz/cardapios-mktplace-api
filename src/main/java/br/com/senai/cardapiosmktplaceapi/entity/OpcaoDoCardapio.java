@@ -2,30 +2,40 @@ package br.com.senai.cardapiosmktplaceapi.entity;
 
 import java.math.BigDecimal;
 
+import br.com.senai.cardapiosmktplaceapi.entity.composite.OpcaoDoCardapioId;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Confirmacao;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Entity(name = "OpcaoCardapio")
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity(name = "OpcaoDoCardapio")
 @Table(name = "opcoes_cardapios")
-public class OpcaoCardapio {
-
-	@DecimalMin(value = "0.0", inclusive = true, message = "O preço não pode ser menor que 0.01")
-	@DecimalMax(value = "100.0", inclusive = false, message = "O preço não pode ser maior que 100.00")
-	@Digits(integer = 2, fraction = 2, message = "O preço de desconto deve possuir o formato 'NN.NN'")
+public class OpcaoDoCardapio {
+	
+	@EmbeddedId
+	@EqualsAndHashCode.Include
+	@NotNull(message = "O id da opção do cardápio é obrigatório")
+	private OpcaoDoCardapioId id;
+	
+	@DecimalMin(value = "0.0", inclusive = true, message = "O preço deve ser posistivo")
+	@Digits(integer = 9, fraction = 2, message = "O preço de desconto deve possuir o formato 'NNNNNNNNN.NN'")
 	@NotNull(message = "O preço não pode ")
-	@Column(name = "O preço é obrigatório")
+	@Column(name = "preco")
 	private BigDecimal preco;
 	
 	@Enumerated(value = EnumType.STRING)
@@ -42,4 +52,15 @@ public class OpcaoCardapio {
 	@NotNull(message = "A seção é obrigatória")
 	@JoinColumn(name = "id_secao")
 	private Secao secao;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@MapsId("idDoCardapio")
+	@JoinColumn(name = "id_cardapio")
+	@NotNull(message = "A cardápio é obrigatória")
+	private Cardapio cardapio;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_opcao")
+	@NotNull(message = "A opção é obrigatória")
+	private Opcao opcao;
 }
