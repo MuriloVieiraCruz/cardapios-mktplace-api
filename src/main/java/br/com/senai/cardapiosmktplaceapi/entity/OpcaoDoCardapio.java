@@ -60,11 +60,18 @@ public class OpcaoDoCardapio {
 	private Cardapio cardapio;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@MapsId("idDaOpcao")
 	@JoinColumn(name = "id_opcao")
 	@NotNull(message = "A opção é obrigatória")
 	private Opcao opcao;
 	
 	public OpcaoDoCardapio() {
 		this.status = Status.A;
+	}
+	
+	public boolean isPersistido() {
+		return getId() != null 
+				&& getId().getIdDaOpcao() > 0
+				&& getId().getIdDoCardapio() > 0;
 	}
 }
