@@ -1,10 +1,10 @@
 package br.com.senai.cardapiosmktplaceapi.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.stereotype.Service;
 
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
+import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
 import jakarta.validation.constraints.NotBlank;
@@ -12,34 +12,35 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-@Validated
-public interface RestauranteService {
+@Service
+public interface OpcaoService {
 
-	public Restaurante salvar(
-			@NotNull(message = "O restaurante é obrigatório")
-			Restaurante restaurante);
+	public Opcao salvar(
+			@NotNull(message = "A opcao não pode ser nula")
+			Opcao opcao);
 	
 	public void atualizarStatusPor(
+			@NotNull(message = "O id é obrigatório")
+			@Positive(message = "O id deve ser positivo")
+			Integer id, 
+			@NotNull(message = "O status é obrigatório")
+			Status status);
+	
+	public Page<Opcao> listarPor(
+			@NotBlank(message = "O nome é obrigatório")
+			@Size(min = 3, max = 100, message = "O nome deve conter entre 3 e 250 caracteres")
+			String nome,
+			Categoria categoria, 
+			Restaurante restaurante);
+	
+	public Opcao buscarPor(
 			@NotNull(message = "O id é obrigatório")
 			@Positive(message = "O id deve ser positivo")
 			Integer id,
 			@NotNull(message = "O status é obrigatório")
 			Status status);
 	
-	public Page<Restaurante> listarPor(
-			@NotBlank(message = "O nome é obrigatório")
-			@Size(min = 3, max = 100, message = "O nome deve conter entre 3 e 250 caracteres")
-			String nome, 
-			@NotNull(message = "A categoria é obrigatória")
-			Categoria categoria, 
-			Pageable page);
-	
-	public Restaurante buscarPor(
-			@NotNull(message = "O id é obrigatório")
-			@Positive(message = "O id deve ser positivo")
-			Integer id);
-	
-	public Restaurante excluirPor(
+	public Opcao excluir(
 			@NotNull(message = "O id é obrigatório")
 			@Positive(message = "O id deve ser positivo")
 			Integer id);

@@ -38,6 +38,7 @@ public class RestauranteServiceImpl implements RestauranteService{
 						" nome do restaurante já está em uso");
 			}
 		}
+		
 		this.categoriaService.buscarPor(restaurante.getCategoria().getId());
 		
 		Restaurante restauranteSalvo = repository.save(restaurante);
