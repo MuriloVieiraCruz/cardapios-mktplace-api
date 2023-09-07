@@ -50,7 +50,7 @@ public class RestauranteServiceImpl implements RestauranteService{
 	public void atualizarStatusPor(Integer id, Status status) {
 		Restaurante restauranteEncontrado = repository.buscarPor(id);
 		Preconditions.checkNotNull(restauranteEncontrado,
-				"Não existe restaurante vinculado ao id infoemado");
+				"Não existe restaurante vinculado ao id informado");
 		Preconditions.checkArgument(restauranteEncontrado.getStatus() != status,
 				"O status já está salvo para o restaurante");
 		this.repository.atualizarPor(id, status);

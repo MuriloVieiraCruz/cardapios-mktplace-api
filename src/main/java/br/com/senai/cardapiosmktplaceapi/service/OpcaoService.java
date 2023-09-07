@@ -1,7 +1,7 @@
 package br.com.senai.cardapiosmktplaceapi.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-@Service
+@Validated
 public interface OpcaoService {
 
 	public Opcao salvar(
