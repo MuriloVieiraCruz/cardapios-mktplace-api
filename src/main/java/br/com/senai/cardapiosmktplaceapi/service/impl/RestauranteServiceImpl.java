@@ -35,7 +35,7 @@ public class RestauranteServiceImpl implements RestauranteService{
 		if (outroRestaurante != null) {
 			if (restaurante.isPersistido()) {
 				Preconditions.checkArgument(outroRestaurante.equals(restaurante),
-						" nome do restaurante já está em uso");
+						"O nome do restaurante já está em uso");
 			}
 		}
 		

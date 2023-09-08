@@ -1,6 +1,7 @@
 package br.com.senai.cardapiosmktplaceapi.repository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,7 @@ public interface SecoesRepository extends JpaRepository<Secao, Integer>{
 					+ "FROM Secao s "
 					+ "WHERE s.nome = :nome "
 					+ "ORDER BY s.nome")
-	public Page<Secao> listarPor(String nome); 
+	public Page<Secao> listarPor(String nome, Pageable paginacao); 
 	
 	@Query(value = 
 			"UPDATE Secao c SET s.status = :status WHERE s.id = :id")

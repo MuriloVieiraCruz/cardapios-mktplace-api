@@ -2,6 +2,7 @@ package br.com.senai.cardapiosmktplaceapi.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.google.common.base.Preconditions;
 
@@ -44,8 +45,8 @@ public class SecaoServiceImpl implements SecaoService{
 	}
 
 	@Override
-	public Page<Secao> listarPor(String nome) {
-		return this.repository.listarPor(nome + "%");
+	public Page<Secao> listarPor(String nome, Pageable paginacao) {
+		return this.repository.listarPor(nome + "%", paginacao);
 	}
 
 	@Override

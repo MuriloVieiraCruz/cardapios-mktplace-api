@@ -1,6 +1,7 @@
 package br.com.senai.cardapiosmktplaceapi.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
@@ -31,14 +32,13 @@ public interface OpcaoService {
 			@Size(min = 3, max = 100, message = "O nome deve conter entre 3 e 250 caracteres")
 			String nome,
 			Categoria categoria, 
-			Restaurante restaurante);
+			Restaurante restaurante,
+			Pageable page);
 	
 	public Opcao buscarPor(
 			@NotNull(message = "O id é obrigatório")
 			@Positive(message = "O id deve ser positivo")
-			Integer id,
-			@NotNull(message = "O status é obrigatório")
-			Status status);
+			Integer id);
 	
 	public Opcao excluir(
 			@NotNull(message = "O id é obrigatório")

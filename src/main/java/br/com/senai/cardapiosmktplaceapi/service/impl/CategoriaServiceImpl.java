@@ -58,7 +58,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 				"Não foi encontrada nenhuma categoria com o id informado");
 		Preconditions.checkNotNull(categoriaEncontrada.isAtiva(),
 				"A categoria está ativa");
-		return null;
+		return categoriaEncontrada;
 	}
 
 	@Override

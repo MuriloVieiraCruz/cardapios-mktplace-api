@@ -11,7 +11,6 @@ import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
-import br.com.senai.cardapiosmktplaceapi.entity.enums.TipoDeCategoria;
 
 @Repository
 public interface OpcoesRepository extends JpaRepository<Opcao, Integer>{
@@ -21,27 +20,27 @@ public interface OpcoesRepository extends JpaRepository<Opcao, Integer>{
 	public Opcao buscarPor(Integer id);
 	
 	@Query(value = 
-			"SELECT c "
-			+ "FROM Categoria c "
-			+ "WHERE Upper(c.nome) = Upper(:nome) "
-			+ "AND c.tipo = :tipo")
-	public Opcao buscarPor(String nome, TipoDeCategoria tipo);
+			"SELECT o " 
+			+ "FROM Opcao o "
+			+ "WHERE Upper(o.nome) = Upper(:nome)")
+	public Opcao buscarPor(String nome);
 	
 	@Query(value = 
 			"SELECT o "
 			+ "FROM Opcao o "
-			+ "JOIN FETCH o.categoria "
-			+ "JOIN FETCH o.restaurante "
-			+ "WHERE (Upper(o.nome) like Upper(:nome)) "
-			+ "JOIN FETCH (categoria = :categoria OR :categoria IS NULL) AND "
-			+ "JOIN FETCH (restaurante = :restaurante OR :restaurante IS NULL) ",	
-			countQuery = "SELECT o "
+			+ "JOIN FETCH o.categoria c "
+			+ "JOIN FETCH o.restaurante r "
+			+ "WHERE (Upper(o.nome) LIKE Upper(:nome)) "
+			+ "AND (:categoria IS NULL OR c = :categoria) "
+			+ "AND (:restaurante IS NULL OR r = :restaurante) "
+			+ "ORDER BY o.nome",
+		    countQuery = "SELECT o "
 					+ "FROM Opcao o "
-					+ "JOIN FETCH o.categoria "
-					+ "JOIN FETCH o.restaurante "
-					+ "WHERE (Upper(o.nome) like Upper(:nome)) "
-					+ "JOIN FETCH (categoria = :categoria OR :categoria IS NULL) AND "
-					+ "JOIN FETCH (restaurante = :restaurante OR :restaurante IS NULL) ")
+					+ "JOIN FETCH o.categoria c "
+					+ "JOIN FETCH o.restaurante r "
+					+ "WHERE (Upper(o.nome) LIKE Upper(:nome)) "
+					+ "AND (:categoria IS NULL OR c = :categoria) "
+					+ "AND (:restaurante IS NULL OR r = :restaurante) ")	
 	public Page<Opcao> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao);
 	
 	@Modifying

@@ -14,4 +14,10 @@ public interface CardapiosRepository extends JpaRepository<Cardapio, Integer>{
 			+ "FROM Cardapio c "
 			+ "WHERE c.restaurante.id = :idDoRestaurante")
 	public Long contarPor(Integer idDoRestaurante);
+	
+	@Query(value = 
+			"SELECT Count(c) "
+			+ "FROM Cardapio c "
+			+ "WHERE c.opcao.id = :idDaOpcao")
+	public Long contarOpcaoPor(Integer idDaOpcao);
 }

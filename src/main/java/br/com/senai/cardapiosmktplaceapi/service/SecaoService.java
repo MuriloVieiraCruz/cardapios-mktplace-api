@@ -1,6 +1,7 @@
 package br.com.senai.cardapiosmktplaceapi.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 import br.com.senai.cardapiosmktplaceapi.entity.Secao;
@@ -25,7 +26,8 @@ public interface SecaoService {
 	
 	public Page<Secao> listarPor(
 			@NotBlank(message = "O nome é obrigatório")
-			String nome);
+			String nome,
+			Pageable paginacao);
 	
 	public Secao buscarPor(
 			@NotNull(message = "O id é obrigatório")
