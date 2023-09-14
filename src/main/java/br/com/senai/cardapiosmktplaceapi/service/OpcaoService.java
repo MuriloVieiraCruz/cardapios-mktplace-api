@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
+import br.com.senai.cardapiosmktplaceapi.dto.OpcaoSalva;
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
@@ -27,7 +28,7 @@ public interface OpcaoService {
 			@NotNull(message = "O status é obrigatório")
 			Status status);
 	
-	public Page<Opcao> listarPor(
+	public Page<OpcaoSalva> listarPor(
 			@NotBlank(message = "O nome é obrigatório")
 			@Size(min = 3, max = 100, message = "O nome deve conter entre 3 e 250 caracteres")
 			String nome,

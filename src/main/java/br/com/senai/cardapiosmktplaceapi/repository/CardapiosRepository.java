@@ -16,31 +16,35 @@ public interface CardapiosRepository extends JpaRepository<Cardapio, Integer>{
 	
 	@Modifying
 	@Query(value = 
-			"UPDATE Cardapio c "
-			+ "SET c.nome = :nome, "
-			+ "c.descricao = :descricao, "
-			+ "c.status = :status "
-			+ "WHERE c.id = :id")
-	public void atualizarPor(Integer id, String nome, String descricao, Status status);
-	
-	@Modifying
-	@Query(value = 
-			"UPDATE Cardapio c SET c.status = :status "
-			+ "WHERE c.id = :id ")
+			"UPDATE Cardapio c SET c.status = :status WHERE c.id = :id ")
 	public void atualizarPor(Integer id, Status status);
 	
 	@Query(value = 
 			"SELECT c "
 			+ "FROM Cardapio c "
-			+ "JOIN FETCH c.restaurante "
+			+ "JOIN FETCH c.restaurante r "
+			+ "JOIN FETCH c.opcoes oc "
+			+ "JOIN FETCH oc.opcao  o "
+			+ "JOIN FETCH oc.secao s "
 			+ "WHERE c.restaurante = :restaurante "
-			+ "ORDER BY c.nome")
-	public Page<Cardapio> listarPor(Restaurante restaurante, Pageable paginacao);
+			+ "AND o.status = 'A' "
+			+ "ORDER BY oc.recomendado DESC, o.nome ",
+			countQuery = "SELECT Count(c) "
+					+ "FROM Cardapio c "
+					+ "WHERE c.restaurante = :restaurante ")
+	public Page<Cardapio> listarPorRestaurante(Restaurante restaurante, Pageable paginacao);
 	
+	//TODO Terminar a consulta
 	@Query(value = 
 			"SELECT c "
 			+ "FROM Cardapio c "
-			+ "WHERE c.id = :id")
+			+ "JOIN FETCH c.restaurante r "
+			+ "JOIN FETCH c.opcoes oc "
+			+ "JOIN FETCH oc.opcao  o "
+			+ "JOIN FETCH oc.secao s "
+			+ "WHERE c.id = :id "
+			+ "AND o.status = 'A' "
+			+ "ORDER BY oc.recomendado DESC, o.nome")
 	public Cardapio buscarPor(Integer id);
 	
 	@Query(value = 
@@ -58,6 +62,7 @@ public interface CardapiosRepository extends JpaRepository<Cardapio, Integer>{
 	@Query(value = 
 			"SELECT Count(c) "
 			+ "FROM Cardapio c "
-			+ "WHERE c.opcao.id = :idDaOpcao")
-	public Long contarOpcaoPor(Integer idDaOpcao);
+			+ "WHERE c.restaurante.id = :idDoRestaurante "
+			+ "AND c.nome = :nome")
+	public Long contarPor(String nome,Integer idDoRestaurante);
 }

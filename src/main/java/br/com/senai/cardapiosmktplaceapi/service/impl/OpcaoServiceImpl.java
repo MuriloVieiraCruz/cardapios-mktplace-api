@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.google.common.base.Preconditions;
 
+import br.com.senai.cardapiosmktplaceapi.dto.OpcaoSalva;
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
@@ -50,11 +51,11 @@ public class OpcaoServiceImpl implements OpcaoService{
 		}
 		
 		Preconditions.checkArgument(opcao.getStatus().equals(Status.A) || opcao.getStatus().equals(Status.I),
-				"Deve ser infomado no status apensa os valores A ou I");
+				"Deve ser infomado no status apenas os valores A ou I");
 		
 		Preconditions.checkArgument(opcao.getPromocao().equals(Confirmacao.N) 
 				|| opcao.getPromocao().equals(Confirmacao.S),
-						"Deve ser infomado na promoção apensa os valores S ou N");
+						"Deve ser infomado na promoção apenas os valores S ou N");
 		
 		if (opcao.getPromocao().equals(Confirmacao.S)) {
 			if (opcao.getPercentualDeDesconto().compareTo(BigDecimal.ZERO) <= 0) {
@@ -81,10 +82,11 @@ public class OpcaoServiceImpl implements OpcaoService{
 	}
 
 	@Override
-	public Page<Opcao> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao) {
+	public Page<OpcaoSalva> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao) {
 		Preconditions.checkArgument(categoria != null && restaurante != null,
 				"É preciso informar no mínimo o restaurante ou categoria");
-		return this.repository.listarPor(nome + "%", categoria, restaurante, paginacao);
+		//return this.repository.listarPor(nome + "%", categoria, restaurante, paginacao);
+		return null;
 	}
 
 	@Override
@@ -100,9 +102,9 @@ public class OpcaoServiceImpl implements OpcaoService{
 	@Override
 	public Opcao excluir(Integer id) {
 		Opcao opcaoEncontrada = repository.buscarPor(id);
-		Long qtdeDeCardapiosVinculados = cardapiosRepository.contarOpcaoPor(id);
-		Preconditions.checkArgument(qtdeDeCardapiosVinculados == 0, 
-				"Não é possível remover pois existem cardapios vinculados");
+		//Long qtdeDeCardapiosVinculados = cardapiosRepository.contarOpcaoPor(id);
+		//Preconditions.checkArgument(qtdeDeCardapiosVinculados == 0, 
+		//		"Não é possível remover pois existem cardapios vinculados");
 		this.repository.deleteById(id);
 		return opcaoEncontrada;
 	}

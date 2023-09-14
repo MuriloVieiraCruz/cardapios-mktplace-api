@@ -36,7 +36,7 @@ public interface SecoesRepository extends JpaRepository<Secao, Integer>{
 	public Page<Secao> listarPor(String nome, Pageable paginacao); 
 	
 	@Query(value = 
-			"UPDATE Secao c SET s.status = :status WHERE s.id = :id")
+			"UPDATE Secao s SET s.status = :status WHERE s.id = :id")
 	public void atualizarPor(Integer id, Status status);
 
 }

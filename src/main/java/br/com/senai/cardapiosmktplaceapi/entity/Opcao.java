@@ -84,4 +84,9 @@ public class Opcao {
 	public boolean isAtiva() {
 		return getStatus() == Status.A;
 	}
+	
+	@Transient
+	public boolean isEmPromocao() {
+		return getPromocao() == Confirmacao.S;
+	}
 }

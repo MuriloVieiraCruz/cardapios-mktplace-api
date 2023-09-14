@@ -16,7 +16,11 @@ import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
 public interface OpcoesRepository extends JpaRepository<Opcao, Integer>{
 
 	@Query(value = 
-			"SELECT o FROM Opcao o WHERE o.id = :id")
+			"SELECT o "
+			+ "FROM Opcao o "
+			+ "JOIN FETCH o.categoria "
+			+ "JOIN FETCH o.restaurante "
+			+ "WHERE o.id = :id")
 	public Opcao buscarPor(Integer id);
 	
 	@Query(value = 
