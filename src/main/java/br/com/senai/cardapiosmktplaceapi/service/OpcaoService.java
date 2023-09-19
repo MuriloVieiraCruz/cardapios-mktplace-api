@@ -9,10 +9,8 @@ import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 
 @Validated
 public interface OpcaoService {
@@ -29,10 +27,9 @@ public interface OpcaoService {
 			Status status);
 	
 	public Page<OpcaoSalva> listarPor(
-			@NotBlank(message = "O nome é obrigatório")
-			@Size(min = 3, max = 100, message = "O nome deve conter entre 3 e 250 caracteres")
+			@NotNull(message = "A opção é obrigatória")
 			String nome,
-			Categoria categoria, 
+			Categoria categoria,
 			Restaurante restaurante,
 			Pageable page);
 	

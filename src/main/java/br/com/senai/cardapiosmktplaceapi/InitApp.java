@@ -23,6 +23,9 @@ public class InitApp {
 	
 	@Autowired
 	private CategoriaRepository categRepository;
+	
+	@Autowired
+	private OpcoesRepository opcoesRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(InitApp.class, args);
@@ -36,6 +39,7 @@ public class InitApp {
 	@Bean
 	public CommandLineRunner commandLineRunner() {
 		return args -> {
+			
 			System.out.println("Subiu");
 		};
 	}

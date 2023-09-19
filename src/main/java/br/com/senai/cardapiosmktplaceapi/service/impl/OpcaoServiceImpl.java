@@ -16,10 +16,10 @@ import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Confirmacao;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
 import br.com.senai.cardapiosmktplaceapi.repository.CardapiosRepository;
+import br.com.senai.cardapiosmktplaceapi.repository.CategoriaRepository;
 import br.com.senai.cardapiosmktplaceapi.repository.OpcoesRepository;
-import br.com.senai.cardapiosmktplaceapi.service.CategoriaService;
+import br.com.senai.cardapiosmktplaceapi.repository.RestaurantesRepository;
 import br.com.senai.cardapiosmktplaceapi.service.OpcaoService;
-import br.com.senai.cardapiosmktplaceapi.service.RestauranteService;
 
 public class OpcaoServiceImpl implements OpcaoService{
 	
@@ -27,15 +27,13 @@ public class OpcaoServiceImpl implements OpcaoService{
 	private OpcoesRepository repository;
 	
 	@Autowired
-	@Qualifier("CategoriaServiceImpl")
-	private CategoriaService categoriaService;
+	private CategoriaRepository categoriaRepository;
 	
 	@Autowired
 	@Qualifier("RestauranteServiceImpl")
-	private RestauranteService restauranteService;
+	private RestaurantesRepository restauranteRepository;
 	
 	@Autowired
-	@Qualifier("categoriaServiceImpl")
 	private CardapiosRepository cardapiosRepository;
 
 	@Override
@@ -50,21 +48,14 @@ public class OpcaoServiceImpl implements OpcaoService{
 					"O nome da opção já está em uso");
 		}
 		
-		Preconditions.checkArgument(opcao.getStatus().equals(Status.A) || opcao.getStatus().equals(Status.I),
-				"Deve ser infomado no status apenas os valores A ou I");
-		
-		Preconditions.checkArgument(opcao.getPromocao().equals(Confirmacao.N) 
-				|| opcao.getPromocao().equals(Confirmacao.S),
-						"Deve ser infomado na promoção apenas os valores S ou N");
-		
 		if (opcao.getPromocao().equals(Confirmacao.S)) {
 			if (opcao.getPercentualDeDesconto().compareTo(BigDecimal.ZERO) <= 0) {
 				opcao.setPercentualDeDesconto(null);
 			}
 		}
 		
-		this.categoriaService.buscarPor(opcao.getCategoria().getId());
-		this.restauranteService.buscarPor(opcao.getRestaurante().getId());
+		this.categoriaRepository.buscarPor(opcao.getCategoria().getId());
+		this.restauranteRepository.buscarPor(opcao.getRestaurante().getId());
 		
 		Opcao opcaoSalva = repository.save(opcao);
 		
@@ -83,10 +74,18 @@ public class OpcaoServiceImpl implements OpcaoService{
 
 	@Override
 	public Page<OpcaoSalva> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao) {
+		Categoria categoriaDoBanco = categoriaRepository.buscarPor(categoria.getId());
+		Restaurante restauranteDoBanco = restauranteRepository.buscarPor(restaurante.getId());
+		
+		Preconditions.checkNotNull(categoriaDoBanco,
+				"Não foi encontrado a categoria informada");
+		
+		Preconditions.checkNotNull(restauranteDoBanco,
+				"Não foi encontrado o restaurante informado");
+		
 		Preconditions.checkArgument(categoria != null && restaurante != null,
-				"É preciso informar no mínimo o restaurante ou categoria");
-		//return this.repository.listarPor(nome + "%", categoria, restaurante, paginacao);
-		return null;
+				"É preciso informar no mínimo o restaurante ou a categoria");
+		return this.repository.listarPor(nome + "%", categoria, restaurante, paginacao);
 	}
 
 	@Override
@@ -108,5 +107,17 @@ public class OpcaoServiceImpl implements OpcaoService{
 		this.repository.deleteById(id);
 		return opcaoEncontrada;
 	}
+	
+//	private Categoria getCategoria(Integer idDaCategoria) {
+//		
+//		Categoria categoria = categoriaRepository.buscarPor(idDaCategoria);
+//		Preconditions.checkNotNull(categoria,
+//				"Não existe categoria vinculada a opção informado");
+//		
+//		Preconditions.checkArgument(categoria.isAtiva(),
+//				"A categoria informada está inativa");
+//		
+//		return categoria;
+//	}
 
 }

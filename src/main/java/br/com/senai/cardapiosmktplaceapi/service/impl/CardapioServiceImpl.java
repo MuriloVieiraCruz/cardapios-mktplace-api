@@ -143,9 +143,9 @@ public class CardapioServiceImpl implements CardapioService{
 			opcaoDoCardapio.setSecao(seccao);
 			opcaoDoCardapio.setPreco(novaOpcao.getPreco());
 			opcaoDoCardapio.setRecomendado(novaOpcao.getRecomendacao());
-			cardapioSalvo.getOpcoes().add(opcaoDoCardapio);
-			Cardapio cardapiom = this.repository.saveAndFlush(cardapioSalvo);
+			cardapioSalvo.getOpcoes().add(opcaoDoCardapio);		
 		}
+		this.repository.saveAndFlush(cardapioSalvo);
 		return repository.buscarPor(cardapioSalvo.getId());
 	}
 
