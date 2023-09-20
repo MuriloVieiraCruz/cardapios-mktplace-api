@@ -83,7 +83,7 @@ public class OpcaoServiceImpl implements OpcaoService{
 		Preconditions.checkNotNull(restauranteDoBanco,
 				"Não foi encontrado o restaurante informado");
 		
-		Preconditions.checkArgument(categoria != null && restaurante != null,
+		Preconditions.checkArgument(categoria != null || restaurante != null,
 				"É preciso informar no mínimo o restaurante ou a categoria");
 		return this.repository.listarPor(nome + "%", categoria, restaurante, paginacao);
 	}
