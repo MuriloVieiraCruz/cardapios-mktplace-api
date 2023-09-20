@@ -37,9 +37,7 @@ public interface OpcoesDoCardapioRepository extends JpaRepository<OpcaoDoCardapi
 	@Modifying
 	@Query(value = 
 			"UPDATE OpcaoDoCardapio odc "
-			+ "SET odc.preco = CASE WHEN :promocao = 'S' "
-			+ "THEN odc.opcao.preco - (odc.opcao.preco * :percentualDeDesconto / 100) "
-			+ "ELSE odc.opcao.preco END , "
+			+ "SET odc.preco = :preco , "
 			+ "JOIN FETCH odc.opcao o "
 			+ "JOIN FETCH odc.secao s "
 			+ "AND odc.recomendado = :recomendado"
