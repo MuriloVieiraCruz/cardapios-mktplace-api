@@ -24,8 +24,7 @@ public interface CardapioService {
 	public Cardapio alterar(
 			@Valid
 			@NotNull(message = "O cardapio é obrigatório")
-			CardapioSalvo cardapioSalvo);
-	
+			CardapioSalvo cardapioSalvo);	
 	
 	public Page<Cardapio> listarPor(
 			@NotNull(message = "O restaurante é obrigatório")

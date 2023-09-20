@@ -20,6 +20,13 @@ public interface OpcoesDoCardapioRepository extends JpaRepository<OpcaoDoCardapi
 	public Long contarPor(Integer id);
 	
 	@Query(value = 
+			"SELECT Count(odc) "
+			+ "FROM OpcaoDoCardapio odc "
+			+ "WHERE odc.opcao.id = :id "
+			+ "AND odc.cardapio = :cardapio")
+	public Long contarPor(Opcao opcao, Cardapio cardapio);
+	
+	@Query(value = 
 			"SELECT odc FROM  OpcaoDoCardapio odc "
 			+ "JOIN FETCH odc.opcao o "
 			+ "JOIN FETCH odc.secao s "
@@ -33,6 +40,8 @@ public interface OpcoesDoCardapioRepository extends JpaRepository<OpcaoDoCardapi
 			+ "SET odc.preco = CASE WHEN :promocao = 'S' "
 			+ "THEN odc.opcao.preco - (odc.opcao.preco * :percentualDeDesconto / 100) "
 			+ "ELSE odc.opcao.preco END , "
+			+ "JOIN FETCH odc.opcao o "
+			+ "JOIN FETCH odc.secao s "
 			+ "AND odc.recomendado = :recomendado"
 			+ "AND odc.opcao = opcao "
 			+ "AND odc.secao = secao "
