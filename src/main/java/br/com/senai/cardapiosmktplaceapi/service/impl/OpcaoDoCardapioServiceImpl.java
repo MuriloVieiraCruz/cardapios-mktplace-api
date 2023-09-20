@@ -42,40 +42,40 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		return null;
 	}
 
-	@Override
-	public OpcaoDoCardapio buscarPor(Opcao opcao, Cardapio cardapio) {
-		Opcao opcaoDoBanco = getOpcaoPor(opcao.getId());
-		OpcaoDoCardapio opcaoDoCardapio = opcoesDoCardapioRepository.buscarPor(opcaoDoBanco, cardapio);
-		
-		Preconditions.checkNotNull(opcaoDoCardapio, 
-				"Não foi encontrado opção vinculada ao cardápio informado");
-		
-		this.atualizaPrecoDa(opcaoDoCardapio);
-		
-		return opcaoDoCardapio;
-	}
+//	@Override
+//	public OpcaoDoCardapio buscarPor(Opcao opcao, Cardapio cardapio) {
+//		Opcao opcaoDoBanco = getOpcaoPor(opcao.getId());
+//		OpcaoDoCardapio opcaoDoCardapio = opcoesDoCardapioRepository.buscarPor(opcaoDoBanco, cardapio);
+//		
+//		Preconditions.checkNotNull(opcaoDoCardapio, 
+//				"Não foi encontrado opção vinculada ao cardápio informado");
+//		
+//		this.atualizaPrecoDa(opcaoDoCardapio);
+//		
+//		return opcaoDoCardapio;
+//	}
 
-	@Override
-	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio) {
-		Opcao opcao = getOpcaoPor(opcaoDoCardapio.getOpcao().getId());
-		Cardapio cardapio = getCardapio(opcaoDoCardapio, opcaoDoCardapio.getCardapio());
-		Secao secao = getSecaoPor(opcaoDoCardapio, opcaoDoCardapio.getSecao());
-		
-		Preconditions.checkArgument(opcaoDoCardapio.getPreco() == null 
-				|| opcaoDoCardapio.getPreco() != BigDecimal.ZERO,
-				"O preço deve ser maior que zero");
-		
-		Long qtdeDeOpcoesIguais = opcoesDoCardapioRepository.contarPor(opcao, cardapio);
-		
-		Preconditions.checkArgument(qtdeDeOpcoesIguais > 0,
-				"A opção informada já existe para o cardápio informado");
-		
-		this.atualizaPrecoDa(opcaoDoCardapio);
-		
-		OpcaoDoCardapio opcaoAtualizada = opcoesDoCardapioRepository.atualizar(opcaoDoCardapio);
-		
-		return opcaoAtualizada;
-	}
+//	@Override
+//	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio) {
+//		Opcao opcao = getOpcaoPor(opcaoDoCardapio.getOpcao().getId());
+//		Cardapio cardapio = getCardapio(opcaoDoCardapio, opcaoDoCardapio.getCardapio());
+//		Secao secao = getSecaoPor(opcaoDoCardapio, opcaoDoCardapio.getSecao());
+//		
+//		Preconditions.checkArgument(opcaoDoCardapio.getPreco() == null 
+//				|| opcaoDoCardapio.getPreco() != BigDecimal.ZERO,
+//				"O preço deve ser maior que zero");
+//		
+//		Long qtdeDeOpcoesIguais = opcoesDoCardapioRepository.contarPor(opcao, cardapio);
+//		
+//		Preconditions.checkArgument(qtdeDeOpcoesIguais > 0,
+//				"A opção informada já existe para o cardápio informado");
+//		
+//		this.atualizaPrecoDa(opcaoDoCardapio);
+//		
+//		OpcaoDoCardapio opcaoAtualizada = opcoesDoCardapioRepository.atualizar(opcaoDoCardapio);
+//		
+//		return opcaoAtualizada;
+//	}
 	
 	private Opcao getOpcaoPor(Integer idDaOpcao) {
 		Opcao opcao = opcoesRepository.buscarPor(idDaOpcao);

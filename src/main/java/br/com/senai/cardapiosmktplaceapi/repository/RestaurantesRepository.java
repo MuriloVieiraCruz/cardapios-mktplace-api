@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface RestaurantesRepository extends JpaRepository<Restaurante, Integer>{
@@ -40,6 +41,7 @@ public interface RestaurantesRepository extends JpaRepository<Restaurante, Integ
 			+ "WHERE r.id = :id ")
 	public Restaurante buscarPor(Integer id);
 	
+	@Transactional
 	@Modifying
 	@Query(value = 
 			"UPDATE Restaurante r SET r.status = :status "

@@ -42,6 +42,7 @@ public class Opcao {
 	@Column(name = "nome")
 	private String nome;
 	
+	@NotNull(message = "A descrição não pode ser nula")
 	@Column(name = "descricao")
 	private String descricao;
 	
