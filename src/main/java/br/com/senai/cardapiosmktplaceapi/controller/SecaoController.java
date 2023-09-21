@@ -53,7 +53,7 @@ public class SecaoController {
 		return ResponseEntity.ok(converter.toJsonMap(secaoAlterada));
 	}
 	
-	@PatchMapping("/id/{id}/status/{statua")
+	@PatchMapping("/id/{id}/status/{status}")
 	private ResponseEntity<?> alterarStatusPor(@PathVariable("id") Integer id, @PathVariable("status") Status status) {
 		this.service.atualizarStatusPor(id, status);
 		return ResponseEntity.ok().build();
