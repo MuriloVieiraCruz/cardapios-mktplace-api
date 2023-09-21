@@ -36,16 +36,16 @@ public interface OpcoesRepository extends JpaRepository<Opcao, Integer>{
 			+ "JOIN FETCH o.categoria c "
 			+ "JOIN FETCH o.restaurante r "
 			+ "WHERE (Upper(o.nome) LIKE Upper(:nome)) "
-			+ "AND (:categoria IS NULL OR c = :categoria) "
-			+ "AND (:restaurante IS NULL OR r = :restaurante) "
-			+ "ORDER BY o.nome")
-//		    countQuery = "SELECT Count(o) "
-//					+ "FROM Opcao o "
-//					+ "JOIN FETCH o.categoria c "
-//					+ "JOIN FETCH o.restaurante r "
-//					+ "WHERE (Upper(o.nome) LIKE Upper(:nome)) "
-//					+ "AND (:categoria IS NULL OR c = :categoria) "
-//					+ "AND (:restaurante IS NULL OR r = :restaurante) ")	
+			+ "AND ((:categoria IS NULL) OR (c = :categoria)) "
+			+ "AND ((:restaurante IS NULL) OR (r = :restaurante)) "
+			+ "ORDER BY o.nome",
+			countQuery = "SELECT Count(o) "
+		            + "FROM Opcao o "
+		            + "JOIN o.categoria c "
+		            + "JOIN o.restaurante r "
+		            + "WHERE (Upper(o.nome) LIKE Upper(:nome)) "
+		            + "AND ((:categoria IS NULL) OR (c = :categoria)) "
+		            + "AND ((:restaurante IS NULL) OR (r = :restaurante)) ")	
 	public Page<OpcaoSalva> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao);
 	
 	@Modifying
