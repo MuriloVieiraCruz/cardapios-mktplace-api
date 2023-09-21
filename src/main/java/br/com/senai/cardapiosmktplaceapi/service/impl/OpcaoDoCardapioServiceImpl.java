@@ -13,6 +13,7 @@ import br.com.senai.cardapiosmktplaceapi.entity.Cardapio;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.OpcaoDoCardapio;
 import br.com.senai.cardapiosmktplaceapi.entity.Secao;
+import br.com.senai.cardapiosmktplaceapi.entity.composite.OpcaoDoCardapioId;
 import br.com.senai.cardapiosmktplaceapi.repository.CardapiosRepository;
 import br.com.senai.cardapiosmktplaceapi.repository.OpcoesDoCardapioRepository;
 import br.com.senai.cardapiosmktplaceapi.repository.OpcoesRepository;
@@ -35,11 +36,22 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 	private OpcoesDoCardapioRepository opcoesDoCardapioRepository;
 
 	@Override
-	public OpcaoDoCardapio inserir(NovaOpcaoCardapio novaOpcaoCardapio) {
+	public OpcaoDoCardapio inserir(NovaOpcaoCardapio novaOpcaoCardapio, Cardapio cardapio) {
 		Opcao opcao = getOpcaoPor(novaOpcaoCardapio.getIdDaOpcao());
-		//Secao secao = getSecaoPor(novaOpcaoCardapio);
+		Secao secao = getSecaoPor(novaOpcaoCardapio.getSecao().getId(), novaOpcaoCardapio.getSecao());
+		Cardapio cardapioRetornado = getCardapio(cardapio);
 		
-		return null;
+		OpcaoDoCardapioId id = new OpcaoDoCardapioId(opcao.getId(), cardapio.getId());
+		
+		OpcaoDoCardapio opcaoDoCardapio = new OpcaoDoCardapio();
+		opcaoDoCardapio.setId(id);
+		opcaoDoCardapio.setPreco(novaOpcaoCardapio.getPreco());
+		opcaoDoCardapio.setRecomendado(novaOpcaoCardapio.getRecomendacao());
+		opcaoDoCardapio.setOpcao(opcao);
+		opcaoDoCardapio.setCardapio(cardapioRetornado);
+		opcaoDoCardapio.setSecao(secao);
+		
+		return opcaoDoCardapio;
 	}
 
 //	@Override
@@ -87,9 +99,9 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		return opcao;
 	}
 	
-	private Cardapio getCardapio(OpcaoDoCardapio opcaoDoCardapio, Cardapio cardapio) {
+	private Cardapio getCardapio(Cardapio cardapio) {
 		
-		Cardapio cardapioEncontrado = cardapiosRepository.buscarPor(opcaoDoCardapio.getCardapio().getId());
+		Cardapio cardapioEncontrado = cardapiosRepository.buscarPor(cardapio.getId());
 		
 		Preconditions.checkNotNull(cardapioEncontrado, 
 				"Não existe cardápio para o id informado");
@@ -103,13 +115,14 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		return cardapioEncontrado;
 	}
 	
-	private Secao getSecaoPor(OpcaoDoCardapio opcaoDoCardapio, Secao secao) {
-		Preconditions.checkNotNull(opcaoDoCardapio.getSecao(), 
+	private Secao getSecaoPor(Integer idDaSecao, Secao secao) {
+		
+		Secao secaoEncontrada = secoesRepository.findById(idDaSecao).get();
+		Preconditions.checkNotNull(secaoEncontrada, 
 				"A seção da oção é obrigatória");
 		
-		Secao secaoEncontrada = secoesRepository.findById(opcaoDoCardapio.getSecao().getId()).get();
 		Preconditions.checkNotNull(secaoEncontrada, 
-				"Não existe seção vinculada ao id '" + opcaoDoCardapio.getSecao().getId() + "'");
+				"Não existe seção vinculada ao id '" + secaoEncontrada.getId() + "'");
 		Preconditions.checkArgument(secaoEncontrada.isAtiva(),
 				"A seção está inativa");
 		
