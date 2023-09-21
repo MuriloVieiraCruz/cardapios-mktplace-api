@@ -22,6 +22,12 @@ public interface OpcoesDoCardapioRepository extends JpaRepository<OpcaoDoCardapi
 	@Query(value = 
 			"SELECT Count(odc) "
 			+ "FROM OpcaoDoCardapio odc "
+			+ "WHERE odc.opcao.id = :id")
+	public Long contarOpcaoPor(Integer id);
+	
+	@Query(value = 
+			"SELECT Count(odc) "
+			+ "FROM OpcaoDoCardapio odc "
 			+ "WHERE odc.opcao = :opcao "
 			+ "AND odc.cardapio = :cardapio")
 	public Long contarPor(@Param("opcao") Opcao opcao, @Param("cardapio") Cardapio cardapio);
