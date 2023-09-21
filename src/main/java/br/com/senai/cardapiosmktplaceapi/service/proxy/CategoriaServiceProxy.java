@@ -20,8 +20,7 @@ public class CategoriaServiceProxy implements CategoriaService{
 
 	@Override
 	public Categoria salvar(Categoria categoria) {
-		// TODO Auto-generated method stub
-		return null;
+		return service.salvar(categoria);
 	}
 
 	@Override
