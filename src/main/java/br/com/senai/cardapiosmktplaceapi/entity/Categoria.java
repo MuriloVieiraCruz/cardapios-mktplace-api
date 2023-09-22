@@ -1,4 +1,4 @@
-package br.com.senai.cardapiosmktplaceapi.entity;
+ package br.com.senai.cardapiosmktplaceapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
