@@ -99,7 +99,7 @@ public class HandlerErrorDefault {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public Map<String, Object> handle(MethodArgumentTypeMismatchException matme){
-		return criarMapDeErro(ErroDaApi.TIPO_PARAMETRO_INVALIDO, matme.getMessage());
+		return criarMapDeErro(ErroDaApi.TIPO_PARAMETRO_INVALIDO, "A URI possui valores inválidos");
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

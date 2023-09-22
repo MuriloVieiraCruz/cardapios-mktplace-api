@@ -1,6 +1,7 @@
 package br.com.senai.cardapiosmktplaceapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,24 +33,25 @@ public interface OpcoesDoCardapioRepository extends JpaRepository<OpcaoDoCardapi
 			+ "AND odc.cardapio = :cardapio")
 	public Long contarPor(@Param("opcao") Opcao opcao, @Param("cardapio") Cardapio cardapio);
 	
-//	@Query(value = 
-//			"SELECT odc FROM OpcaoDoCardapio odc "
-//			+ "JOIN FETCH odc.opcao o "
-//			+ "JOIN FETCH odc.secao s "
-//			+ "WHERE odc.opcao = :opcao "
-//			+ "AND odc.secao = :secao")
-//	public OpcaoDoCardapio buscarPor(@Param("opcao") Opcao opcao, @Param("cardapio") Cardapio cardapio);
+	@Query(value = 
+			"SELECT odc "
+			+ "FROM OpcaoDoCardapio odc "
+			+ "JOIN FETCH odc.opcao o "
+			+ "JOIN FETCH odc.secao s "
+			+ "WHERE odc.opcao = :opcao "
+			+ "AND odc.cardapio = :cardapio")
+	public OpcaoDoCardapio buscarPor(@Param("opcao") Opcao opcao, @Param("cardapio") Cardapio cardapio);
 
-//	@Modifying
-//	@Query(value = 
-//			"UPDATE OpcaoDoCardapio odc "
-//			+ "SET odc.preco = :preco , "
-//			+ "JOIN FETCH odc.opcao o "
-//			+ "JOIN FETCH odc.secao s "
-//			+ "AND odc.recomendado = :recomendado"
-//			+ "AND odc.opcao = opcao "
-//			+ "AND odc.secao = secao "
-//			+ "AND odc.cardapio = cardapio ")
-//	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio);
+	@Modifying
+	@Query(value = 
+			"UPDATE OpcaoDoCardapio odc "
+			+ "SET odc.preco = :preco "
+			+ "JOIN FETCH odc.opcao o "
+			+ "JOIN FETCH odc.secao s "
+			+ "AND odc.recomendado = :recomendado"
+			+ "AND odc.opcao = opcao "
+			+ "AND odc.secao = secao "
+			+ "AND odc.cardapio = cardapio ")
+	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio);
 	
 }

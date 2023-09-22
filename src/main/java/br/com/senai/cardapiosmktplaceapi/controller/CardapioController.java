@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Preconditions;
@@ -44,10 +45,7 @@ public class CardapioController {
 	
 	@Autowired
 	@Qualifier("restauranteServiceProxy")
-	private RestauranteService restauranteService;
-	
-	@Autowired
-	private MapConverter converter;
+	private RestauranteService restauranteService; 
 	
 	@PostMapping
 	public ResponseEntity<?> inserir(@RequestBody NovoCardapio novoCardapio) {
@@ -59,14 +57,16 @@ public class CardapioController {
 	
 	@Transactional
 	@PutMapping
-	public ResponseEntity<?> alterar(CardapioSalvo cardapioSalvo) {
+	public ResponseEntity<?> alterar(
+			@RequestBody
+			CardapioSalvo cardapioSalvo) {
 		
 		Preconditions.checkNotNull(cardapioSalvo.getId(), 
 				"O cardapio precisa ter um ID vinculado");
 		
 		Cardapio cardapio = service.alterar(cardapioSalvo);
 		
-		return ResponseEntity.ok(converter.toJsonMap(cardapio));
+		return ResponseEntity.ok(converter(cardapio));
 	}
 	
 	@Transactional
@@ -80,15 +80,17 @@ public class CardapioController {
 	
 	@GetMapping("/id/{id}")
 	public ResponseEntity<?> buscarPor(@PathVariable("id") Integer id) {
-		Cardapio cardapio = service.buscarPor(id);
+		Cardapio cardapioEncontrado = service.buscarPor(id);;
 		
-		Map<String, Object> cardapioFormatado = converter(cardapio);
-		
-		return ResponseEntity.ok(converter.toJsonMap(cardapioFormatado));
+		return ResponseEntity.ok(converter(cardapioEncontrado));
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> listarPor(Restaurante restaurante, Optional<Integer> pagina){
+	public ResponseEntity<?> listarPor(
+			@RequestParam(name = "id-restaurante")
+			Integer idDoRestaurante,
+			@RequestParam(name = "pagina")
+			Optional<Integer> pagina){
 		
 		Pageable paginacao = null;
 		if (pagina.isPresent()) {
@@ -97,14 +99,19 @@ public class CardapioController {
 			paginacao = PageRequest.of(0, 15);
 		}
 		
-		Page<Cardapio> cardapios = service.listarPor(restaurante, paginacao);
-		Map<String, Object> cardapiosFormatados = new HashMap<String, Object>();
-		
-		for (Cardapio cardapio : cardapios) {
-			cardapiosFormatados = converter(cardapio);
+		Restaurante restaurante = restauranteService.buscarPor(idDoRestaurante);
+		Page<Cardapio> page = service.listarPor(restaurante, paginacao);
+		Map<String, Object> pageMap = new HashMap<String, Object>();
+		pageMap.put("paginaAtual", page.getNumber());
+		pageMap.put("totalDeItens", page.getTotalElements());
+		pageMap.put("totalDePaginas", page.getTotalPages());
+		List<Map<String, Object>> listagem = new ArrayList<Map<String,Object>>();
+		for (Cardapio cardapio : page.getContent()) {
+			listagem.add(converter(cardapio));
 		}
 		
-		return ResponseEntity.ok(converter.toJsonMap(cardapiosFormatados));
+		pageMap.put("listagem", listagem);
+		return ResponseEntity.ok(pageMap);
 	}
 	
 	private Map<String, Object> converter(Cardapio cardapio) {

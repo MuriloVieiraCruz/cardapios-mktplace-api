@@ -46,7 +46,7 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		OpcaoDoCardapio opcaoDoCardapio = new OpcaoDoCardapio();
 		opcaoDoCardapio.setId(id);
 		opcaoDoCardapio.setPreco(novaOpcaoCardapio.getPreco());
-		opcaoDoCardapio.setRecomendado(novaOpcaoCardapio.getRecomendacao());
+		opcaoDoCardapio.setRecomendado(novaOpcaoCardapio.getRecomendado());
 		opcaoDoCardapio.setOpcao(opcao);
 		opcaoDoCardapio.setCardapio(cardapioRetornado);
 		opcaoDoCardapio.setSecao(secao);
@@ -54,18 +54,18 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		return opcaoDoCardapio;
 	}
 
-//	@Override
-//	public OpcaoDoCardapio buscarPor(Opcao opcao, Cardapio cardapio) {
-//		Opcao opcaoDoBanco = getOpcaoPor(opcao.getId());
-//		OpcaoDoCardapio opcaoDoCardapio = opcoesDoCardapioRepository.buscarPor(opcaoDoBanco, cardapio);
-//		
-//		Preconditions.checkNotNull(opcaoDoCardapio, 
-//				"Não foi encontrado opção vinculada ao cardápio informado");
-//		
-//		this.atualizaPrecoDa(opcaoDoCardapio);
-//		
-//		return opcaoDoCardapio;
-//	}
+	@Override
+	public OpcaoDoCardapio buscarPor(Opcao opcao, Cardapio cardapio) {
+		Opcao opcaoDoBanco = getOpcaoPor(opcao.getId());
+		OpcaoDoCardapio opcaoDoCardapio = opcoesDoCardapioRepository.buscarPor(opcaoDoBanco, cardapio);
+		
+		Preconditions.checkNotNull(opcaoDoCardapio, 
+				"Não foi encontrado opção vinculada ao cardápio informado");
+		
+		this.atualizaPrecoDa(opcaoDoCardapio);
+		
+		return opcaoDoCardapio;
+	}
 
 //	@Override
 //	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio) {
