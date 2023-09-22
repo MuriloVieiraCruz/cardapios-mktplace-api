@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import br.com.senai.cardapiosmktplaceapi.dto.OpcaoSalva;
+import br.com.senai.cardapiosmktplaceapi.dto.OpcaoCarregada;
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
@@ -46,7 +46,7 @@ public interface OpcoesRepository extends JpaRepository<Opcao, Integer>{
 		            + "WHERE (Upper(o.nome) LIKE Upper(:nome)) "
 		            + "AND ((:categoria IS NULL) OR (c = :categoria)) "
 		            + "AND ((:restaurante IS NULL) OR (r = :restaurante)) ")	
-	public Page<OpcaoSalva> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao);
+	public Page<OpcaoCarregada> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao);
 	
 	@Modifying
 	@Query(value = 

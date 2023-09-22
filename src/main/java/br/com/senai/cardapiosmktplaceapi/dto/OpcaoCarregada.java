@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OpcaoSalva {
+public class OpcaoCarregada {
 	
 	@NotBlank(message = "O id da opção é obrigatório")
 	private String nome;

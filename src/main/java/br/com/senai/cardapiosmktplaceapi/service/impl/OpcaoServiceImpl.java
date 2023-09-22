@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
 
-import br.com.senai.cardapiosmktplaceapi.dto.OpcaoSalva;
+import br.com.senai.cardapiosmktplaceapi.dto.OpcaoCarregada;
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
@@ -72,7 +72,7 @@ public class OpcaoServiceImpl implements OpcaoService{
 	}
 
 	@Override
-	public Page<OpcaoSalva> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao) {
+	public Page<OpcaoCarregada> listarPor(String nome, Categoria categoria, Restaurante restaurante, Pageable paginacao) {
 		Categoria categoriaDoBanco = categoriaService.buscarPor(categoria.getId());
 		Restaurante restauranteDoBanco = restauranteService.buscarPor(restaurante.getId());	
 		Preconditions.checkNotNull(categoriaDoBanco,

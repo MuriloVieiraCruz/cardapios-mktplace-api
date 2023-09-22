@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.senai.cardapiosmktplaceapi.dto.OpcaoSalva;
+import br.com.senai.cardapiosmktplaceapi.dto.OpcaoCarregada;
 import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
@@ -31,7 +31,7 @@ public class OpcaoServiceProxy implements OpcaoService{
 	}
 
 	@Override
-	public Page<OpcaoSalva> listarPor(String nome, Categoria categoria,Restaurante restaurante, Pageable page) {
+	public Page<OpcaoCarregada> listarPor(String nome, Categoria categoria,Restaurante restaurante, Pageable page) {
 		return service.listarPor(nome, categoria, restaurante, page);
 	}
 
