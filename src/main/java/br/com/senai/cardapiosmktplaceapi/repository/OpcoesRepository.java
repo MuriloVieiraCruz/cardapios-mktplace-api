@@ -12,6 +12,7 @@ import br.com.senai.cardapiosmktplaceapi.entity.Categoria;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.Restaurante;
 import br.com.senai.cardapiosmktplaceapi.entity.enums.Status;
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface OpcoesRepository extends JpaRepository<Opcao, Integer>{

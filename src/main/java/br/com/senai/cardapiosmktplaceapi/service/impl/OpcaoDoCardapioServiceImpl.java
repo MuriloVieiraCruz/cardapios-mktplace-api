@@ -19,6 +19,7 @@ import br.com.senai.cardapiosmktplaceapi.repository.OpcoesDoCardapioRepository;
 import br.com.senai.cardapiosmktplaceapi.repository.OpcoesRepository;
 import br.com.senai.cardapiosmktplaceapi.repository.SecoesRepository;
 import br.com.senai.cardapiosmktplaceapi.service.OpcaoDoCardapioService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
@@ -37,27 +38,30 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 
 	@Override
 	public OpcaoDoCardapio inserir(NovaOpcaoCardapio novaOpcaoCardapio, Cardapio cardapio) {
-		Opcao opcao = getOpcaoPor(novaOpcaoCardapio.getIdDaOpcao());
-		Secao secao = getSecaoPor(novaOpcaoCardapio.getSecao().getId(), novaOpcaoCardapio.getSecao());
+		Opcao opcaoRetornada = getOpcaoPor(novaOpcaoCardapio.getIdDaOpcao());
+		Secao secaoRetornada = getSecaoPor(novaOpcaoCardapio.getSecao().getId(), novaOpcaoCardapio.getSecao());
 		Cardapio cardapioRetornado = getCardapioPor(cardapio.getId());
 		
-		OpcaoDoCardapioId id = new OpcaoDoCardapioId(opcao.getId(), cardapio.getId());
+		OpcaoDoCardapioId id = new OpcaoDoCardapioId(opcaoRetornada.getId(), cardapioRetornado.getId());
 		
 		OpcaoDoCardapio opcaoDoCardapio = new OpcaoDoCardapio();
 		opcaoDoCardapio.setId(id);
 		opcaoDoCardapio.setPreco(novaOpcaoCardapio.getPreco());
 		opcaoDoCardapio.setRecomendado(novaOpcaoCardapio.getRecomendado());
-		opcaoDoCardapio.setOpcao(opcao);
+		opcaoDoCardapio.setOpcao(opcaoRetornada);
 		opcaoDoCardapio.setCardapio(cardapioRetornado);
-		opcaoDoCardapio.setSecao(secao);
+		opcaoDoCardapio.setSecao(secaoRetornada);
 		
-		return opcaoDoCardapio;
+		OpcaoDoCardapio opcaoDoCardapioSalva = opcoesDoCardapioRepository.saveAndFlush(opcaoDoCardapio);
+		
+		return opcaoDoCardapioSalva;
 	}
 
 	@Override
 	public OpcaoDoCardapio buscarPor(Opcao opcao, Cardapio cardapio) {
 		Opcao opcaoDoBanco = getOpcaoPor(opcao.getId());
-		OpcaoDoCardapio opcaoDoCardapio = opcoesDoCardapioRepository.buscarPor(opcaoDoBanco, cardapio);
+		Cardapio cardapioDoBanco = getCardapioPor(cardapio.getId());
+		OpcaoDoCardapio opcaoDoCardapio = opcoesDoCardapioRepository.buscarPor(opcaoDoBanco, cardapioDoBanco);
 		
 		Preconditions.checkNotNull(opcaoDoCardapio, 
 				"Não foi encontrado opção vinculada ao cardápio informado");
@@ -69,15 +73,15 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 
 	@Override
 	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio) {
+		
 		Opcao opcaoEncontrada = getOpcaoPor(opcaoDoCardapio.getOpcao().getId());
 		Cardapio cardapioEncontrado = getCardapioPor(opcaoDoCardapio.getCardapio().getId());
-		Secao secao = getSecaoPor(opcaoDoCardapio.getSecao().getId(), opcaoDoCardapio.getSecao());
+		getSecaoPor(opcaoDoCardapio.getSecao().getId(), opcaoDoCardapio.getSecao());
 		
 		OpcaoDoCardapio opcaoDoCardapioEncontrado = buscarPor(opcaoEncontrada, cardapioEncontrado);
-		Preconditions.checkArgument(opcaoDoCardapioEncontrado.getCardapio().equals(opcaoDoCardapio.getCardapio()),
-				"O cardápio informado está diferente do original");
+//		Preconditions.checkArgument(opcaoDoCardapioEncontrado.getCardapio().equals(cardapioEncontrado),
+//				"O cardápio informado está diferente do original");
 		
-		opcaoDoCardapioEncontrado.setOpcao(opcaoDoCardapio.getOpcao());
 		opcaoDoCardapioEncontrado.setPreco(opcaoDoCardapio.getPreco());
 		opcaoDoCardapioEncontrado.setRecomendado(opcaoDoCardapio.getRecomendado());
 		opcaoDoCardapioEncontrado.setStatus(opcaoDoCardapio.getStatus());		
@@ -87,14 +91,11 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 				"O preço deve ser maior que zero");
 		
 		Long qtdeDeOpcoesIguais = opcoesDoCardapioRepository.contarPor(opcaoEncontrada, cardapioEncontrado);
-		
 		Preconditions.checkArgument(qtdeDeOpcoesIguais > 0,
 				"A opção informada já existe para o cardápio informado");
 		
 		this.atualizaPrecoDa(opcaoDoCardapioEncontrado);
-		
 		OpcaoDoCardapio opcaoAtualizada = opcoesDoCardapioRepository.saveAndFlush(opcaoDoCardapioEncontrado);
-		
 		return opcaoAtualizada;
 	}
 	
@@ -124,20 +125,20 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 	private Secao getSecaoPor(Integer idDaSecao, Secao secao) {
 		
 		Secao secaoEncontrada = secoesRepository.findById(idDaSecao).get();
-		Preconditions.checkNotNull(secaoEncontrada, 
+		Preconditions.checkNotNull(secao, 
 				"A seção da oção é obrigatória");
 		
 		Preconditions.checkNotNull(secaoEncontrada, 
 				"Não existe seção vinculada ao id '" + secaoEncontrada.getId() + "'");
 		Preconditions.checkArgument(secaoEncontrada.isAtiva(),
 				"A seção está inativa");
-		
 		Preconditions.checkArgument(secaoEncontrada.equals(secao),
 				"A seção informada está diferente da original");
 		
 		return secaoEncontrada;
 	}
 	
+	@Transactional
 	private void atualizaPrecoDa(OpcaoDoCardapio opcaoDoCardapio) {
 		if (opcaoDoCardapio.getOpcao().isEmPromocao()) {
 			BigDecimal divisor = new BigDecimal(100);

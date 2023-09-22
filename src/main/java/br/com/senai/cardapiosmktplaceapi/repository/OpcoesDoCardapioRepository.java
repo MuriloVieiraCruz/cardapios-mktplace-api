@@ -36,7 +36,7 @@ public interface OpcoesDoCardapioRepository extends JpaRepository<OpcaoDoCardapi
 			"SELECT odc "
 			+ "FROM OpcaoDoCardapio odc "
 			+ "JOIN FETCH odc.opcao o "
-			+ "JOIN FETCH odc.secao s "
+			+ "JOIN FETCH odc.cardapio c "
 			+ "WHERE odc.opcao = :opcao "
 			+ "AND odc.cardapio = :cardapio")
 	public OpcaoDoCardapio buscarPor(@Param("opcao") Opcao opcao, @Param("cardapio") Cardapio cardapio);	

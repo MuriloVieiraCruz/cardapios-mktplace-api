@@ -6,6 +6,7 @@ import br.com.senai.cardapiosmktplaceapi.dto.NovaOpcaoCardapio;
 import br.com.senai.cardapiosmktplaceapi.entity.Cardapio;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.OpcaoDoCardapio;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
