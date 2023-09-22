@@ -39,7 +39,7 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 	public OpcaoDoCardapio inserir(NovaOpcaoCardapio novaOpcaoCardapio, Cardapio cardapio) {
 		Opcao opcao = getOpcaoPor(novaOpcaoCardapio.getIdDaOpcao());
 		Secao secao = getSecaoPor(novaOpcaoCardapio.getSecao().getId(), novaOpcaoCardapio.getSecao());
-		Cardapio cardapioRetornado = getCardapio(cardapio);
+		Cardapio cardapioRetornado = getCardapioPor(cardapio.getId());
 		
 		OpcaoDoCardapioId id = new OpcaoDoCardapioId(opcao.getId(), cardapio.getId());
 		
@@ -67,27 +67,36 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		return opcaoDoCardapio;
 	}
 
-//	@Override
-//	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio) {
-//		Opcao opcao = getOpcaoPor(opcaoDoCardapio.getOpcao().getId());
-//		Cardapio cardapio = getCardapio(opcaoDoCardapio, opcaoDoCardapio.getCardapio());
-//		Secao secao = getSecaoPor(opcaoDoCardapio, opcaoDoCardapio.getSecao());
-//		
-//		Preconditions.checkArgument(opcaoDoCardapio.getPreco() == null 
-//				|| opcaoDoCardapio.getPreco() != BigDecimal.ZERO,
-//				"O preço deve ser maior que zero");
-//		
-//		Long qtdeDeOpcoesIguais = opcoesDoCardapioRepository.contarPor(opcao, cardapio);
-//		
-//		Preconditions.checkArgument(qtdeDeOpcoesIguais > 0,
-//				"A opção informada já existe para o cardápio informado");
-//		
-//		this.atualizaPrecoDa(opcaoDoCardapio);
-//		
-//		OpcaoDoCardapio opcaoAtualizada = opcoesDoCardapioRepository.atualizar(opcaoDoCardapio);
-//		
-//		return opcaoAtualizada;
-//	}
+	@Override
+	public OpcaoDoCardapio atualizar(OpcaoDoCardapio opcaoDoCardapio) {
+		Opcao opcaoEncontrada = getOpcaoPor(opcaoDoCardapio.getOpcao().getId());
+		Cardapio cardapioEncontrado = getCardapioPor(opcaoDoCardapio.getCardapio().getId());
+		Secao secao = getSecaoPor(opcaoDoCardapio.getSecao().getId(), opcaoDoCardapio.getSecao());
+		
+		OpcaoDoCardapio opcaoDoCardapioEncontrado = buscarPor(opcaoEncontrada, cardapioEncontrado);
+		Preconditions.checkArgument(opcaoDoCardapioEncontrado.getCardapio().equals(opcaoDoCardapio.getCardapio()),
+				"O cardápio informado está diferente do original");
+		
+		opcaoDoCardapioEncontrado.setOpcao(opcaoDoCardapio.getOpcao());
+		opcaoDoCardapioEncontrado.setPreco(opcaoDoCardapio.getPreco());
+		opcaoDoCardapioEncontrado.setRecomendado(opcaoDoCardapio.getRecomendado());
+		opcaoDoCardapioEncontrado.setStatus(opcaoDoCardapio.getStatus());		
+		
+		Preconditions.checkArgument(opcaoDoCardapio.getPreco() == null 
+				|| opcaoDoCardapio.getPreco() != BigDecimal.ZERO,
+				"O preço deve ser maior que zero");
+		
+		Long qtdeDeOpcoesIguais = opcoesDoCardapioRepository.contarPor(opcaoEncontrada, cardapioEncontrado);
+		
+		Preconditions.checkArgument(qtdeDeOpcoesIguais > 0,
+				"A opção informada já existe para o cardápio informado");
+		
+		this.atualizaPrecoDa(opcaoDoCardapioEncontrado);
+		
+		OpcaoDoCardapio opcaoAtualizada = opcoesDoCardapioRepository.saveAndFlush(opcaoDoCardapioEncontrado);
+		
+		return opcaoAtualizada;
+	}
 	
 	private Opcao getOpcaoPor(Integer idDaOpcao) {
 		Opcao opcao = opcoesRepository.buscarPor(idDaOpcao);
@@ -99,18 +108,15 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		return opcao;
 	}
 	
-	private Cardapio getCardapio(Cardapio cardapio) {
+	private Cardapio getCardapioPor(Integer idCardapio) {
 		
-		Cardapio cardapioEncontrado = cardapiosRepository.buscarPor(cardapio.getId());
+		Cardapio cardapioEncontrado = cardapiosRepository.buscarPor(idCardapio);
 		
 		Preconditions.checkNotNull(cardapioEncontrado, 
 				"Não existe cardápio para o id informado");
 		
 		Preconditions.checkArgument(cardapioEncontrado.isAtiva(),
 				"O cardápio informado está inativo");
-		
-		Preconditions.checkArgument(cardapioEncontrado.equals(cardapio),
-				"O cardápio informado está diferente do original");
 		
 		return cardapioEncontrado;
 	}

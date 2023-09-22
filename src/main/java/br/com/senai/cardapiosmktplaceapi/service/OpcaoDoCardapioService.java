@@ -26,8 +26,8 @@ public interface OpcaoDoCardapioService {
 			Opcao opcao, 
 			@NotNull(message = "O cardápio é obrigatório")
 			Cardapio cardapio);
-//	
-//	public OpcaoDoCardapio atualizar(
-//			@NotNull(message = "A opção do cardápio é obrigatória")
-//			OpcaoDoCardapio opcaoDoCardapio);
+	
+	public OpcaoDoCardapio atualizar(
+			@NotNull(message = "A opção do cardápio é obrigatória")
+			OpcaoDoCardapio opcaoDoCardapio);
 }
