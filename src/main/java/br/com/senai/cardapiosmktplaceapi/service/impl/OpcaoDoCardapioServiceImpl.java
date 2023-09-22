@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
 
-import br.com.senai.cardapiosmktplaceapi.dto.NovaOpcaoCardapio;
+import br.com.senai.cardapiosmktplaceapi.dto.NovaOpcaoRequest;
 import br.com.senai.cardapiosmktplaceapi.entity.Cardapio;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.OpcaoDoCardapio;
@@ -37,17 +37,18 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 	private OpcoesDoCardapioRepository opcoesDoCardapioRepository;
 
 	@Override
-	public OpcaoDoCardapio inserir(NovaOpcaoCardapio novaOpcaoCardapio, Cardapio cardapio) {
-		Opcao opcaoRetornada = getOpcaoPor(novaOpcaoCardapio.getIdDaOpcao());
-		Secao secaoRetornada = getSecaoPor(novaOpcaoCardapio.getSecao().getId(), novaOpcaoCardapio.getSecao());
-		Cardapio cardapioRetornado = getCardapioPor(cardapio.getId());
+	public OpcaoDoCardapio inserir(NovaOpcaoRequest novaOpcaoRequest) {
+		Opcao opcaoRetornada = getOpcaoPor(novaOpcaoRequest.getNovaOpcaoCardapio().getIdDaOpcao());
+		Secao secaoRetornada = getSecaoPor(novaOpcaoRequest.getNovaOpcaoCardapio().getSecao().getId(), 
+				novaOpcaoRequest.getNovaOpcaoCardapio().getSecao());
+		Cardapio cardapioRetornado = getCardapioPor(novaOpcaoRequest.getIdDoCardapio());
 		
 		OpcaoDoCardapioId id = new OpcaoDoCardapioId(opcaoRetornada.getId(), cardapioRetornado.getId());
 		
 		OpcaoDoCardapio opcaoDoCardapio = new OpcaoDoCardapio();
 		opcaoDoCardapio.setId(id);
-		opcaoDoCardapio.setPreco(novaOpcaoCardapio.getPreco());
-		opcaoDoCardapio.setRecomendado(novaOpcaoCardapio.getRecomendado());
+		opcaoDoCardapio.setPreco(novaOpcaoRequest.getNovaOpcaoCardapio().getPreco());
+		opcaoDoCardapio.setRecomendado(novaOpcaoRequest.getNovaOpcaoCardapio().getRecomendado());
 		opcaoDoCardapio.setOpcao(opcaoRetornada);
 		opcaoDoCardapio.setCardapio(cardapioRetornado);
 		opcaoDoCardapio.setSecao(secaoRetornada);
@@ -111,7 +112,7 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 	
 	private Cardapio getCardapioPor(Integer idCardapio) {
 		
-		Cardapio cardapioEncontrado = cardapiosRepository.buscarPor(idCardapio);
+		Cardapio cardapioEncontrado = cardapiosRepository.findById(idCardapio).get();
 		
 		Preconditions.checkNotNull(cardapioEncontrado, 
 				"Não existe cardápio para o id informado");

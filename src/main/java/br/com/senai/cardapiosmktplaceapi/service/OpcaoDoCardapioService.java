@@ -2,11 +2,10 @@ package br.com.senai.cardapiosmktplaceapi.service;
 
 import org.springframework.validation.annotation.Validated;
 
-import br.com.senai.cardapiosmktplaceapi.dto.NovaOpcaoCardapio;
+import br.com.senai.cardapiosmktplaceapi.dto.NovaOpcaoRequest;
 import br.com.senai.cardapiosmktplaceapi.entity.Cardapio;
 import br.com.senai.cardapiosmktplaceapi.entity.Opcao;
 import br.com.senai.cardapiosmktplaceapi.entity.OpcaoDoCardapio;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,10 +15,7 @@ public interface OpcaoDoCardapioService {
 	public OpcaoDoCardapio inserir(
 			@Valid
 			@NotNull(message = "A nova opção do cardápio é obrigatória")
-			NovaOpcaoCardapio novaOpcaoCardapio,
-			@Valid
-			@NotNull(message = "O cardápio é obrigatório")
-			Cardapio cardapio);
+			NovaOpcaoRequest novaOpcaoRequest);
 	
 	
 	public OpcaoDoCardapio buscarPor(
