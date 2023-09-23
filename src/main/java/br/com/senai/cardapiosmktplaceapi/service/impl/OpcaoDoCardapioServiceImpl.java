@@ -80,8 +80,8 @@ public class OpcaoDoCardapioServiceImpl implements OpcaoDoCardapioService{
 		getSecaoPor(opcaoDoCardapio.getSecao().getId(), opcaoDoCardapio.getSecao());
 		
 		OpcaoDoCardapio opcaoDoCardapioEncontrado = buscarPor(opcaoEncontrada, cardapioEncontrado);
-//		Preconditions.checkArgument(opcaoDoCardapioEncontrado.getCardapio().equals(cardapioEncontrado),
-//				"O cardápio informado está diferente do original");
+		Preconditions.checkArgument(opcaoDoCardapioEncontrado.getCardapio().equals(cardapioEncontrado),
+				"O cardápio informado está diferente do original");
 		
 		opcaoDoCardapioEncontrado.setPreco(opcaoDoCardapio.getPreco());
 		opcaoDoCardapioEncontrado.setRecomendado(opcaoDoCardapio.getRecomendado());
