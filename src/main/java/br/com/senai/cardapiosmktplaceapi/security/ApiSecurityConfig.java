@@ -47,7 +47,7 @@ public class ApiSecurityConfig {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(service);
 		authenticationProvider.setPasswordEncoder(passwordEncoder());
-		return authenticationProvider();
+		return authenticationProvider;
 	}
 	
 	private UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource() {
@@ -62,10 +62,11 @@ public class ApiSecurityConfig {
 		return ccs;
 	}
 	
+	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(csrf -> csrf.disable())
-			.authorizeHttpRequests((request) ->
+			.authorizeHttpRequests(request ->
 					request.
 						requestMatchers("/auth/**")
 							.permitAll()
