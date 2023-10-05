@@ -15,9 +15,9 @@ public class ErrorProcessor implements Processor, Serializable{
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		Exception error = exchange.getProperty("erro", Exception.class);
+		Exception error = exchange.getProperty("error", Exception.class);
 		error.printStackTrace();
-		throw new IntegracaoException(null);
+		throw new IntegracaoException(error.getMessage());
 	}
 
 }

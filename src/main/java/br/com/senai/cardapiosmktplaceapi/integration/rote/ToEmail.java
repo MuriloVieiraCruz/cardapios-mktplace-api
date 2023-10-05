@@ -30,7 +30,7 @@ public class ToEmail extends RouteBuilder{
 					.process(new Processor() {
 						
 						@Override
-						public void process(Exchange exchange) throws Exception {
+						public void process(Exchange exchange) throws Exception {							
 							Notificacao notificacao = exchange.getMessage().getBody(Notificacao.class);
 							JSONObject notificacaoJson = new JSONObject();
 							notificacaoJson.put("destinatario", notificacao.getDestinatario());
@@ -41,7 +41,7 @@ public class ToEmail extends RouteBuilder{
 					})
 					.toD(urlDeEnvio)
 				.doCatch(Exception.class)
-					.setProperty("error", simple("$${exception}"))
+					.setProperty("error", simple("${exception}"))
 					.process(errorProcessor)
 			.end();
 	}
